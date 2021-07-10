@@ -11,23 +11,19 @@ function renderUserList(data) {
   data.forEach((item) => {
     rawHTML += `<div class="col-sm-3 col-lg-2">
       <div class="card">
-      <button type="button" >
-        <img src="${item.avatar}" class="card-img-top btn-show-info w-75" alt="user picture" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#user-modal" data-id="${item.id}">
+        <img src="${item.avatar}" class="btn card-img-top btn-show-info w-75" alt="user picture" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#user-modal" data-id="${item.id}">
         <div class="card-body ">
           <p class="card-text">${item.surname} ${item.name}</p>
         </div>
-      </button>
+         <div class="card-footer">
+              <button type="button" class="btn btn-danger btn-xs btn-add-favorite" data-id=${item.id}><i class="far fa-heart"></i></button>
+          </div>
+      
  </div>
-    </div>`;
-  });
+    </div>`
+  })
   dataPanel.innerHTML = rawHTML;
 }
-
-axios.get(INDEX_URL).then((response) => {
-  users.push(...response.data.results);
-  console.log(users);
-  renderUserList(users);
-});
 
 //設置modal 的函示
 function showUserModal(id) {
@@ -50,12 +46,24 @@ function showUserModal(id) {
   });
 }
 
+function addToFavorite(id){
+
+  const list = JSON.parse(localStorage.getItem("favoriteUsers")) || [ ]
+  const user = users.find((user) => user.id === id)
+  if (list.some((user) => user.id === id )){ 
+    return alert("已加入喜愛清單！")
+  }
+  list.push(user)
+  localStorage.setItem("favoriteUsers",JSON.stringify(list))
+}
+
 //設置一個點擊的指令
 dataPanel.addEventListener("click", function onPanelClicked(event) {
   if (event.target.matches(".btn-show-info")) {
-    showUserModal(Number(event.target.dataset.id));
+    showUserModal(Number(event.target.dataset.id))
     //把id用成 數字屬性
-  }
+  } else if (event.target.matches('.btn-add-favorite')) 
+  { addToFavorite(Number(event.target.dataset.id)) }
 });
 
 //在form設定search-form的監聽
@@ -67,8 +75,7 @@ const searchInput = document.querySelector("#myInput");
 
 searchForm.addEventListener("submit", function onSearchFormSubmitted(event) {
   event.preventDefault(); //要加這個，才不會一直轉跳頁面
-  console.log("click!"); //測試用
-
+  
   //設定輸入的字詞
   const keyword = searchInput.value.trim().toLowerCase();
   //如果沒有輸入內容，會跳出'請輸入有效字串！'
@@ -99,23 +106,6 @@ searchForm.addEventListener("submit", function onSearchFormSubmitted(event) {
 
 const paginator = document.querySelector(".pagination-panel");
 
-// function newPaginationList() {
-//   let pageList = " ";
-//   for (i = 1; i < paginationLength; i++) {
-//     pageList += `
-//       <li class="page-item"><a class="page-link" href="#">${i}</a></li>
-//     `;
-//   }
-//   paginationPanel.innerHTML = pageList;
-// }
-
-// newPaginationList
-
-//在.pagination-panel放上新的paginationlist
-
-//設定第一頁要顯示的部分，第二頁要顯示的部分
-
-//設定把userlist分頁的函示
 const USERS_PER_PAGE = 36;
 
 function getUsersByPage(page) {
@@ -124,7 +114,6 @@ function getUsersByPage(page) {
   const startIndex = (page - 1) * USERS_PER_PAGE;
   
   return data.slice(startIndex, startIndex + USERS_PER_PAGE);
-  //多練習slice用法
 }
 
 //將getUsersByPage函數用axios帶入

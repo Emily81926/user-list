@@ -22,22 +22,21 @@ body #data-panel {
   margin: 0 auto;
 }
 
-body #data-panel .card {
-  border-style: none;
-}
 
-body #data-panel button {
+
+body #data-panel .card{
   margin: 5px;
-  background: white;
   border-radius: 5%;
-  height: 190px;
-  width: 150px;
-  margin: auto;
+  height: 280px;
+  width: 200px;
+  margin: 3 auto;
 }
 
 body #data-panel .card-body {
   display: block;
-  height: 100px;
+  height: 85px;
+  background: white;
+  
 }
 
 body #data-panel .card img {
@@ -51,6 +50,14 @@ body #data-panel .card img {
 body #data-panel .card-body .card-text {
   font-family: "Otomanopee One", sans-serif;
   font-size: 1em;
+  font-display: center;
+}
+
+
+body #data-panel .card .card-footer{
+  display: flex;
+  justify-content: flex-end;
+  height: 70px;
 }
 
 body #user-modal .modal-header {
